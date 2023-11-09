@@ -4,25 +4,38 @@
 <RadzenComponents />
 <RadzenLayout Style="grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
     <RadzenHeader>
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
-            <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
-            <RadzenLabel Text="Header" />
-        </RadzenStack>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+                <RadzenLabel Text="Header" />
+            </div>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" Wrap="FlexWrap.Wrap">
+                <RadzenButton Click=@(args => ToggleTheme())>
+                    @{
+                        if (currentTheme == "Light")
+                        {
+                            <RadzenIcon Icon="dark_mode" />
+                        }
+                        else
+                        {
+                            <RadzenIcon Icon="light_mode" />
+                        }
+                    }
+                </RadzenButton>
+            </RadzenStack>
+        </div>
     </RadzenHeader>
+
+
     <RadzenSidebar @bind-Expanded="@sidebarExpanded">
         <RadzenPanelMenu>
             <RadzenPanelMenuItem Text="Home" Icon="home" />
             <RadzenPanelMenuItem Text="Users" Icon="account_box" />
         </RadzenPanelMenu>
-        <div class="rz-p-4">
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="1rem" Wrap="FlexWrap.Wrap">
-                <RadzenButton Shade="Shade.Lighter" Click=@(args => OnChangeTheme("Light")) Text="Light" ButtonStyle="ButtonStyle.Light" />
-                <RadzenButton Shade="Shade.Lighter" Click=@(args => OnChangeTheme("Dark")) Text="Dark" ButtonStyle="ButtonStyle.Dark" />
-            </RadzenStack>
-        </div>
     </RadzenSidebar>
     <RadzenBody>
         <div class="rz-p-4">
+            <h1>@currentTheme</h1>
             @Body
         </div>
     </RadzenBody>
@@ -30,9 +43,25 @@
 
 @code {
     bool sidebarExpanded = true;
-    private void OnChangeTheme(string theme)
+    string currentTheme = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        JSRuntime.InvokeVoidAsync("OnClickLightDark", theme);
-        NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Button Clicked", Detail = theme });
+        if (firstRender)
+        {
+            currentTheme = await JSRuntime.InvokeAsync<string>("GetCurrentTheme");
+        }
+    }
+
+    private async Task ToggleTheme()
+    {
+        currentTheme = (currentTheme == "Light") ? "Dark" : "Light";
+        await OnChangeTheme(currentTheme);
+    }
+    private async Task OnChangeTheme(string theme)
+    {
+        currentTheme = theme;
+        await JSRuntime.InvokeVoidAsync("OnClickLightDark", currentTheme);
+        NotificationService.Notify(new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Button Clicked", Detail = currentTheme });
     }
 }

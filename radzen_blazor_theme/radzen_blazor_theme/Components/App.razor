@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="radzen_blazor_theme.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
-    <link id="lightThemeLink" rel="" href="_content/Radzen.Blazor/css/material-base.css">
+    <link id="lightThemeLink" rel="" href="_content/Radzen.Blazor/css/material.css">
     <link id="darkThemeLink" rel="" href="_content/Radzen.Blazor/css/dark.css">
 
     <HeadOutlet />
@@ -33,6 +33,20 @@
                 // If no theme is stored, set the default "Light" theme and save it to local storage
                 setTheme("Light");
                 localStorage.setItem("Theme", "Light");
+            }
+        }
+        function GetCurrentTheme() {
+            const storedTheme = localStorage.getItem("Theme");
+
+            if (storedTheme) {
+                // If a theme is stored, set it
+                setTheme(storedTheme);
+                return storedTheme;
+            } else {
+                // If no theme is stored, set the default "Light" theme and save it to local storage
+                setTheme("Light");
+                localStorage.setItem("Theme", "Light");
+                return "Light";
             }
         }
 
