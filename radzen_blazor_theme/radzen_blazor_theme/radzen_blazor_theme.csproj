@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\radzen_blazor_theme.Client\radzen_blazor_theme.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0-rc.2.23480.2" />
+    <PackageReference Include="Radzen.Blazor" Version="4.20.1" />
   </ItemGroup>
 
 </Project>

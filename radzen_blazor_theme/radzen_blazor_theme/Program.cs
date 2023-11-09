@@ -1,3 +1,4 @@
+using Radzen;
 using radzen_blazor_theme.Client.Pages;
 using radzen_blazor_theme.Components;
 
@@ -13,7 +14,7 @@ namespace radzen_blazor_theme
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
-
+            builder.Services.AddRadzenComponents();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

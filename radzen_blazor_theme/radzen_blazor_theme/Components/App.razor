@@ -9,12 +9,52 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="radzen_blazor_theme.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
+    <link id="lightThemeLink" rel="" href="_content/Radzen.Blazor/css/material-base.css">
+    <link id="darkThemeLink" rel="" href="_content/Radzen.Blazor/css/dark.css">
+
     <HeadOutlet />
 </head>
 
 <body>
-    <Routes />
+    <Routes @rendermode="@RenderMode.InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+    <script>
+        // On page load, check if the theme is stored in local storage, or set it to the default "Light" theme.
+        OnLoadTheme();
+
+        function OnLoadTheme() {
+            const storedTheme = localStorage.getItem("Theme");
+
+            if (storedTheme) {
+                // If a theme is stored, set it
+                setTheme(storedTheme);
+            } else {
+                // If no theme is stored, set the default "Light" theme and save it to local storage
+                setTheme("Light");
+                localStorage.setItem("Theme", "Light");
+            }
+        }
+
+        function OnClickLightDark(theme) {
+            setTheme(theme);
+            localStorage.setItem("Theme", theme);
+        }
+
+        function setTheme(theme) {
+            const lightThemeLink = document.getElementById("lightThemeLink");
+            const darkThemeLink = document.getElementById("darkThemeLink");
+
+            if (theme === "Light") {
+                lightThemeLink.rel = "stylesheet";
+                darkThemeLink.rel = "";
+            } else {
+                lightThemeLink.rel = "";
+                darkThemeLink.rel = "stylesheet";
+            }
+        }
+    </script>
+
 </body>
 
 </html>
